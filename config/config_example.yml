@@ -1,0 +1,7 @@
+GRPCAddr: :8081
+
+DatabaseDSN: postgres://change_me:change_me@localhost:5555/change_me?sslmode=disable
+
+JWTSecret: change_me
+
+MasterKey: change_me

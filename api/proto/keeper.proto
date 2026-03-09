@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package keeper;
+
+option go_package = "github.com/Nekrasov-Sergey/goph-keeper/internal/proto;pb";
+
+message RegisterRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  string token = 1;
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+enum SecretType {
+  Unspecified = 0;
+  LoginPassword = 1;
+  Text = 2;
+  Binary = 3;
+  BankCard = 4;
+}
+
+message Secret {
+  int64 id = 1;
+  string name = 2;
+  SecretType type = 3;
+}
+
+message GetSecretsRequest {}
+
+message GetSecretsResponse {
+  repeated Secret secrets = 1;
+}
+
+message CreateSecretRequest {
+  string name = 1;
+  SecretType type = 2;
+  bytes data = 3;
+  optional string metadata = 4;
+}
+
+message CreateSecretResponse {}
+
+message GetSecretRequest {
+  int64 id = 1;
+}
+
+message GetSecretResponse {
+  string name = 1;
+  SecretType type = 2;
+  bytes data = 3;
+  optional string metadata = 4;
+}
+
+message UpdateSecretRequest {
+  int64 id = 1;
+  optional string name = 2;
+  optional bytes data = 4;
+  optional string metadata = 5;
+}
+
+message UpdateSecretResponse {}
+
+message DeleteSecretRequest {
+  int64 id = 1;
+}
+
+message DeleteSecretResponse {}
+
+service Keeper {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse){}
+
+  rpc GetSecrets(GetSecretsRequest) returns (GetSecretsResponse){}
+  rpc CreateSecret(CreateSecretRequest) returns (CreateSecretResponse){}
+  rpc GetSecret(GetSecretRequest) returns (GetSecretResponse){}
+  rpc UpdateSecret(UpdateSecretRequest) returns (UpdateSecretResponse){}
+  rpc DeleteSecret(DeleteSecretRequest) returns (DeleteSecretResponse){}
+}
