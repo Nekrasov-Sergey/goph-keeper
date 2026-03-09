@@ -1,0 +1,85 @@
+package config
+
+import (
+	"encoding/base64"
+	"os"
+
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
+)
+
+type ServerConfig struct {
+	GRPCAddr    string
+	DatabaseDSN string
+	JWTSecret   []byte
+	MasterKey   []byte
+}
+
+type rawServerConfig struct {
+	GRPCAddr    string
+	DatabaseDSN string
+	JWTSecret   string
+	MasterKey   string
+}
+
+func GetConfigPath() string {
+	c := os.Getenv("CONFIG_PATH")
+	if c == "" {
+		c = "./config/local.yml"
+	}
+	return c
+}
+
+func NewServerConfig(logger zerolog.Logger) (*ServerConfig, error) {
+	viper.SetConfigFile(GetConfigPath())
+
+	raw := rawServerConfig{
+		GRPCAddr: ":8081",
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, errors.Wrap(err, "не удалось прочитать конфигурацию из файла")
+	}
+
+	if err := viper.Unmarshal(&raw); err != nil {
+		return nil, errors.Wrap(err, "не удалось распарсить конфигурацию в структуру")
+	}
+
+	jwtSecret, err := mustDecodeKey(raw.JWTSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	masterKey, err := mustDecodeKey(raw.MasterKey)
+	if err != nil {
+		return nil, err
+	}
+
+	cfg := ServerConfig{
+		GRPCAddr:    raw.GRPCAddr,
+		DatabaseDSN: raw.DatabaseDSN,
+		JWTSecret:   jwtSecret,
+		MasterKey:   masterKey,
+	}
+
+	logger.Info().
+		Str("GRPCAddr", cfg.GRPCAddr).
+		Str("DatabaseDSN", cfg.DatabaseDSN).
+		Msg("Загружена конфигурация сервера")
+
+	return &cfg, nil
+}
+
+func mustDecodeKey(key string) ([]byte, error) {
+	b, err := base64.StdEncoding.DecodeString(key)
+	if err != nil {
+		return nil, errors.Wrap(err, "не удалось декодировать ключ")
+	}
+
+	if len(b) != 32 {
+		return nil, errors.New("ключ должен быть 32 байт")
+	}
+
+	return b, nil
+}
