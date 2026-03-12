@@ -1,7 +1,6 @@
 package client
 
 import (
-	"bufio"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -15,9 +14,12 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/utils"
 )
 
-func (c *Client) GetSecret(ctx context.Context, reader *bufio.Reader) {
-	fmt.Print("ID: ")
-	id := readInt(reader)
+func (c *Client) GetSecret(ctx context.Context) {
+	id, err := promptSecretID()
+	if err != nil {
+		fmt.Println("ошибка ввода:", err)
+		return
+	}
 
 	ctx, cancel := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel()
@@ -67,11 +69,14 @@ func (c *Client) GetSecret(ctx context.Context, reader *bufio.Reader) {
 		fmt.Println(text)
 
 	case types.SecretTypeBinary:
-		fmt.Print("Куда сохранить файл: ")
-		path := readLine(reader)
+		path, err := promptString("Куда сохранить файл")
+		if err != nil {
+			fmt.Println("ошибка ввода:", err)
+			return
+		}
 
 		if err := os.WriteFile(path, resp.Data, 0600); err != nil {
-			fmt.Println("Ошибка сохранения файла:", err)
+			fmt.Println("ошибка сохранения файла:", err)
 			return
 		}
 
