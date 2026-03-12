@@ -1,7 +1,6 @@
 package client
 
 import (
-	"bufio"
 	"context"
 	"time"
 
@@ -9,15 +8,18 @@ import (
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 )
 
-func (c *Client) Register(ctx context.Context, reader *bufio.Reader) error {
-	loginPassword := readCredentials(reader)
+func (c *Client) Register(ctx context.Context) error {
+	creds, err := promptCredentials()
+	if err != nil {
+		return err
+	}
 
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	resp, err := c.grpcClient.Register(ctx, &pb.RegisterRequest{
-		Login:    loginPassword.Login,
-		Password: loginPassword.Password,
+		Login:    creds.Login,
+		Password: creds.Password,
 	})
 	if err != nil {
 		grpc.PrintError(err)

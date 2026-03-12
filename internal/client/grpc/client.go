@@ -16,7 +16,7 @@ type KeeperClient struct {
 func New(gRPCAddress string) (*KeeperClient, error) {
 	conn, err := grpc.NewClient(
 		gRPCAddress,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithTransportCredentials(insecure.NewCredentials()), // todo сделать общение с сервером по TLS
 	)
 	if err != nil {
 		return nil, errors.Wrapf(err, "ошибка подключения к gRPC серверу по адресу %s", gRPCAddress)
