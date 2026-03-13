@@ -22,7 +22,7 @@ func (c *Client) GetSecrets(ctx context.Context) {
 
 	if len(resp.Secrets) == 0 {
 		fmt.Println()
-		fmt.Println("Секретов нет")
+		fmt.Println("секретов нет")
 		return
 	}
 

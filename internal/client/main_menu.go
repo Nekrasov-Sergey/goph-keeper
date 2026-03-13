@@ -2,21 +2,27 @@ package client
 
 import (
 	"context"
+	"fmt"
 )
 
 func (c *Client) MainMenu(ctx context.Context) {
 	for {
-		cmd := selectMenu("Меню", []string{
+		fmt.Println()
+
+		cmd, err := selectMenu("Меню", []string{
 			"Создать секрет",
 			"Список секретов",
 			"Получить секрет",
 			"Редактировать секрет",
 			"Удалить секрет",
-			"Выход",
+			"Назад",
 		})
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 
 		switch cmd {
-
 		case "Создать секрет":
 			c.CreateSecret(ctx)
 
@@ -32,7 +38,7 @@ func (c *Client) MainMenu(ctx context.Context) {
 		case "Удалить секрет":
 			c.DeleteSecret(ctx)
 
-		case "Выход":
+		case "Назад":
 			return
 		}
 	}

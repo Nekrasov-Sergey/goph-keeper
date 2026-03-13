@@ -32,6 +32,7 @@ func (c *Client) GetSecret(ctx context.Context) {
 		return
 	}
 
+	fmt.Println()
 	fmt.Println("Название:", resp.Name)
 
 	secretTypeRu, err := mappers.TranslateProtoSecretType(resp.Type)

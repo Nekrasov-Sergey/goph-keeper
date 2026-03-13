@@ -37,5 +37,6 @@ func (c *Client) CreateSecret(ctx context.Context) {
 		return
 	}
 
+	fmt.Println()
 	fmt.Println("Секрет создан")
 }
