@@ -26,7 +26,7 @@ func LoggerInterceptor(baseLogger zerolog.Logger) grpc.UnaryServerInterceptor {
 		code := st.Code()
 
 		l = l.With().
-			Str("grpc_code", st.String()).
+			Str("grpc_code", code.String()).
 			Str("duration", time.Since(start).String()).
 			Logger()
 

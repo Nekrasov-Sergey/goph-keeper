@@ -39,6 +39,7 @@ func run() (err error) {
 	cli := client.New(cfg, grpcClient.Client)
 
 	cli.AuthMenu(ctx)
+	fmt.Println()
 	fmt.Println("Программа завершена")
 
 	return nil

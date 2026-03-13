@@ -7,10 +7,10 @@ import (
 )
 
 func PrintError(err error) {
-	st, ok := status.FromError(err)
-	if !ok {
-		fmt.Println(err)
+	fmt.Println()
+	if st, ok := status.FromError(err); ok {
+		fmt.Println(st.Message())
 		return
 	}
-	fmt.Println(st.Message())
+	fmt.Println(err)
 }

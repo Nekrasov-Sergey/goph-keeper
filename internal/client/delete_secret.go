@@ -27,5 +27,6 @@ func (c *Client) DeleteSecret(ctx context.Context) {
 		return
 	}
 
+	fmt.Println()
 	fmt.Println("Секрет удалён")
 }
