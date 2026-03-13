@@ -2,7 +2,6 @@ package client
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"strconv"
 
@@ -12,6 +11,20 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/utils"
 )
+
+func selectMenu(label string, items []string) (string, error) {
+	prompt := promptui.Select{
+		Label: label,
+		Items: items,
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		return "", err
+	}
+
+	return result, nil
+}
 
 func promptString(label string) (string, error) {
 	prompt := promptui.Prompt{
@@ -29,13 +42,13 @@ func promptString(label string) (string, error) {
 func promptPassword(label string) (string, error) {
 	prompt := promptui.Prompt{
 		Label: label,
+		Mask:  '*',
 		Validate: func(input string) error {
 			if input == "" {
 				return errors.New("поле не может быть пустым")
 			}
 			return nil
 		},
-		Mask: '*',
 	}
 	return prompt.Run()
 }
@@ -58,29 +71,31 @@ func promptCredentials() (types.LoginPassword, error) {
 }
 
 func promptSecretID() (int64, error) {
+	var parsed int64
+
 	prompt := promptui.Prompt{
 		Label: "ID секрета",
 		Validate: func(input string) error {
-			if _, err := strconv.ParseInt(input, 10, 64); err != nil {
+			id, err := strconv.ParseInt(input, 10, 64)
+			if err != nil {
 				return errors.New("некорректный ID")
 			}
+			parsed = id
 			return nil
 		},
 	}
 
-	result, err := prompt.Run()
-	if err != nil {
+	if _, err := prompt.Run(); err != nil {
 		return 0, err
 	}
 
-	id, _ := strconv.ParseInt(result, 10, 64)
-	return id, nil
+	return parsed, nil
 }
 
 func promptCreateSecret() (*types.SecretInput, error) {
 	items := []struct {
-		Label string
-		Type  types.SecretType
+		label string
+		typ   types.SecretType
 	}{
 		{string(types.SecretTypeLoginPasswordRu), types.SecretTypeLoginPassword},
 		{string(types.SecretTypeTextRu), types.SecretTypeText},
@@ -91,28 +106,29 @@ func promptCreateSecret() (*types.SecretInput, error) {
 
 	labels := make([]string, len(items))
 	for i := range items {
-		labels[i] = items[i].Label
+		labels[i] = items[i].label
 	}
 
-	selectPrompt := promptui.Select{
+	prompt := promptui.Select{
 		Label: "Тип секрета",
 		Items: labels,
 	}
 
-	index, _, err := selectPrompt.Run()
+	index, _, err := prompt.Run()
 	if err != nil {
 		return nil, err
 	}
 
-	if items[index].Type == "" {
-		return nil, fmt.Errorf("операция отменена")
+	secretType := items[index].typ
+	if secretType == "" {
+		return nil, errors.New("операция отменена")
 	}
 
 	secret := &types.SecretInput{
-		Type: items[index].Type,
+		Type: secretType,
 	}
 
-	switch secret.Type {
+	switch secretType {
 	case types.SecretTypeLoginPassword:
 		secret.Data, err = promptCreateLoginPassword()
 
@@ -127,7 +143,7 @@ func promptCreateSecret() (*types.SecretInput, error) {
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("ошибка сериализации: %w", err)
+		return nil, errors.Wrap(err, "ошибка подготовки данных")
 	}
 
 	name, err := promptString("Название секрета")
@@ -137,15 +153,19 @@ func promptCreateSecret() (*types.SecretInput, error) {
 
 	secret.Name = name
 
-	metaSelect := promptui.Select{
-		Label: "Добавить дополнительную информацию?",
-		Items: []string{"Да", "Нет"},
+	metaChoice, err := selectMenu(
+		"Добавить дополнительную информацию?",
+		[]string{"Да", "Нет"},
+	)
+	if err != nil {
+		return nil, err
 	}
 
-	_, metaChoice, _ := metaSelect.Run()
-
 	if metaChoice == "Да" {
-		meta, _ := promptString("Дополнительная информация")
+		meta, err := promptString("Дополнительная информация")
+		if err != nil {
+			return nil, err
+		}
 		secret.Metadata = utils.Ptr(meta)
 	}
 
@@ -153,19 +173,15 @@ func promptCreateSecret() (*types.SecretInput, error) {
 }
 
 func promptUpdateSecret(secretType types.SecretType) (*types.UpdatedSecret, error) {
-	items := []string{
-		"Название",
-		"Основные данные",
-		"Дополнительные данные",
-		"Отмена",
-	}
-
-	prompt := promptui.Select{
-		Label: "Что обновить?",
-		Items: items,
-	}
-
-	_, result, err := prompt.Run()
+	result, err := selectMenu(
+		"Что обновить?",
+		[]string{
+			"Название",
+			"Основные данные",
+			"Дополнительные данные",
+			"Отмена",
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -173,60 +189,41 @@ func promptUpdateSecret(secretType types.SecretType) (*types.UpdatedSecret, erro
 	updated := &types.UpdatedSecret{}
 
 	switch result {
-
 	case "Название":
-
 		name, err := promptString("Название")
 		if err != nil {
 			return nil, err
 		}
-
 		updated.Name = utils.Ptr(name)
 
 	case "Основные данные":
-
 		switch secretType {
-
 		case types.SecretTypeLoginPassword:
-			data, err := promptCreateLoginPassword()
-			if err != nil {
-				return nil, err
-			}
-			updated.Data = data
+			updated.Data, err = promptCreateLoginPassword()
 
 		case types.SecretTypeText:
-			data, err := promptCreateText()
-			if err != nil {
-				return nil, err
-			}
-			updated.Data = data
+			updated.Data, err = promptCreateText()
 
 		case types.SecretTypeBinary:
-			data, err := promptCreateBinary()
-			if err != nil {
-				return nil, err
-			}
-			updated.Data = data
+			updated.Data, err = promptCreateBinary()
 
 		case types.SecretTypeBankCard:
-			data, err := promptCreateBankCard()
-			if err != nil {
-				return nil, err
-			}
-			updated.Data = data
+			updated.Data, err = promptCreateBankCard()
 		}
 
-	case "Дополнительные данные":
-
-		meta, err := promptString("Дополнительные данные")
 		if err != nil {
 			return nil, err
 		}
 
+	case "Дополнительные данные":
+		meta, err := promptString("Дополнительные данные")
+		if err != nil {
+			return nil, err
+		}
 		updated.Metadata = utils.Ptr(meta)
 
 	case "Отмена":
-		return nil, fmt.Errorf("операция отменена")
+		return nil, errors.New("операция отменена")
 	}
 
 	return updated, nil
@@ -256,21 +253,36 @@ func promptCreateBinary() ([]byte, error) {
 
 	info, err := os.Stat(path)
 	if err != nil {
-		return nil, fmt.Errorf("ошибка получения информации о файле: %w", err)
+		return nil, errors.Wrap(err, "ошибка получения информации о файле")
 	}
 
 	if info.Size() > 10*1024*1024 {
-		return nil, fmt.Errorf("файл слишком большой (максимум 10MB)")
+		return nil, errors.New("файл слишком большой (максимум 10MB)")
 	}
 
 	return os.ReadFile(path)
 }
 
 func promptCreateBankCard() ([]byte, error) {
-	number, _ := promptString("Номер карты")
-	holder, _ := promptString("Владелец карты")
-	expiry, _ := promptString("Срок действия (MM/YY)")
-	cvv, _ := promptPassword("CVV")
+	number, err := promptString("Номер карты")
+	if err != nil {
+		return nil, err
+	}
+
+	holder, err := promptString("Владелец карты")
+	if err != nil {
+		return nil, err
+	}
+
+	expiry, err := promptString("Срок действия (MM/YY)")
+	if err != nil {
+		return nil, err
+	}
+
+	cvv, err := promptPassword("CVV")
+	if err != nil {
+		return nil, err
+	}
 
 	card := types.BankCard{
 		Number: number,
