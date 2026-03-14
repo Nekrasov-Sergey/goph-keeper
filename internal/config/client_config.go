@@ -7,14 +7,16 @@ import (
 )
 
 type ClientConfig struct {
-	GRPCAddr string
+	GRPCAddr    string
+	TLSCertFile string
 }
 
 func NewClientConfig() (*ClientConfig, error) {
 	viper.SetConfigFile(GetConfigPath())
 
 	cfg := ClientConfig{
-		GRPCAddr: ":8081",
+		GRPCAddr:    ":8081",
+		TLSCertFile: "certs/server.crt",
 	}
 
 	if err := viper.ReadInConfig(); err != nil {

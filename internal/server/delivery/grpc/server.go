@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
@@ -26,6 +27,8 @@ type Service interface {
 type options struct {
 	gRPCAddress string
 	jwtSecret   []byte
+	tlsCertFile string
+	tlsKeyFile  string
 }
 
 type Option func(*options)
@@ -39,6 +42,18 @@ func WithGRPCAddress(gRPCAddress string) Option {
 func WithJWTSecret(jwtSecret []byte) Option {
 	return func(o *options) {
 		o.jwtSecret = jwtSecret
+	}
+}
+
+func WithTLSCertFile(tlsCertFile string) Option {
+	return func(o *options) {
+		o.tlsCertFile = tlsCertFile
+	}
+}
+
+func WithTLSKeyFile(tlsKeyFile string) Option {
+	return func(o *options) {
+		o.tlsKeyFile = tlsKeyFile
 	}
 }
 
@@ -57,9 +72,21 @@ func New(service Service, logger zerolog.Logger, opts ...Option) (*Server, error
 		opt(o)
 	}
 
+	grpcOpts := []grpc.ServerOption{
+		grpc.ChainUnaryInterceptor(LoggerInterceptor(logger), AuthInterceptor(o.jwtSecret)),
+	}
+
+	if o.tlsCertFile != "" && o.tlsKeyFile != "" {
+		creds, err := credentials.NewServerTLSFromFile(o.tlsCertFile, o.tlsKeyFile)
+		if err != nil {
+			return nil, errors.Wrap(err, "ошибка загрузки TLS сертификатов")
+		}
+		grpcOpts = append(grpcOpts, grpc.Creds(creds))
+	}
+
 	return &Server{
 		address: o.gRPCAddress,
-		server:  grpc.NewServer(grpc.ChainUnaryInterceptor(LoggerInterceptor(logger), AuthInterceptor(o.jwtSecret))),
+		server:  grpc.NewServer(grpcOpts...),
 		service: service,
 		logger:  logger,
 	}, nil
