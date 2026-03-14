@@ -45,7 +45,14 @@ func run() (err error) {
 
 	s := service.New(repo, l, service.WithJWTSecret(cfg.JWTSecret), service.WithMasterKey(cfg.MasterKey))
 
-	grpcSrv, err := grpc.New(s, l, grpc.WithGRPCAddress(cfg.GRPCAddr), grpc.WithJWTSecret(cfg.JWTSecret))
+	grpcSrv, err := grpc.New(
+		s,
+		l,
+		grpc.WithGRPCAddress(cfg.GRPCAddr),
+		grpc.WithJWTSecret(cfg.JWTSecret),
+		grpc.WithTLSCertFile(cfg.TLSCertFile),
+		grpc.WithTLSKeyFile(cfg.TLSKeyFile),
+	)
 	if err != nil {
 		return err
 	}

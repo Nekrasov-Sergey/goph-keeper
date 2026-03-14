@@ -1,7 +1,6 @@
 GRPCAddr: :8081
-
 DatabaseDSN: postgres://change_me:change_me@localhost:5555/change_me?sslmode=disable
-
 JWTSecret: change_me
-
 MasterKey: change_me
+TLSCert: certs/server.crt
+TLSKey: certs/server.key

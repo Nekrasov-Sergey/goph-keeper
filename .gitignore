@@ -28,3 +28,6 @@ vendor/
 .env
 
 config/local.yml
+
+certs/server.crt
+certs/server.key

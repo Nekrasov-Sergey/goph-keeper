@@ -30,7 +30,7 @@ func run() (err error) {
 		return err
 	}
 
-	grpcClient, err := grpc.New(cfg.GRPCAddr)
+	grpcClient, err := grpc.New(grpc.WithGRPCAddress(cfg.GRPCAddr), grpc.WithTLSCertFile(cfg.TLSCertFile))
 	if err != nil {
 		return err
 	}

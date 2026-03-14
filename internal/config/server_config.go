@@ -14,6 +14,8 @@ type ServerConfig struct {
 	DatabaseDSN string
 	JWTSecret   []byte
 	MasterKey   []byte
+	TLSCertFile string
+	TLSKeyFile  string
 }
 
 type rawServerConfig struct {
@@ -21,6 +23,8 @@ type rawServerConfig struct {
 	DatabaseDSN string
 	JWTSecret   string
 	MasterKey   string
+	TLSCertFile string
+	TLSKeyFile  string
 }
 
 func GetConfigPath() string {
@@ -35,7 +39,9 @@ func NewServerConfig(logger zerolog.Logger) (*ServerConfig, error) {
 	viper.SetConfigFile(GetConfigPath())
 
 	raw := rawServerConfig{
-		GRPCAddr: ":8081",
+		GRPCAddr:    ":8081",
+		TLSCertFile: "certs/server.crt",
+		TLSKeyFile:  "certs/server.key",
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -61,11 +67,15 @@ func NewServerConfig(logger zerolog.Logger) (*ServerConfig, error) {
 		DatabaseDSN: raw.DatabaseDSN,
 		JWTSecret:   jwtSecret,
 		MasterKey:   masterKey,
+		TLSCertFile: raw.TLSCertFile,
+		TLSKeyFile:  raw.TLSKeyFile,
 	}
 
 	logger.Info().
 		Str("GRPCAddr", cfg.GRPCAddr).
 		Str("DatabaseDSN", cfg.DatabaseDSN).
+		Str("TLSCertFile", cfg.TLSCertFile).
+		Str("TLSKeyFile", cfg.TLSKeyFile).
 		Msg("Загружена конфигурация сервера")
 
 	return &cfg, nil
