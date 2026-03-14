@@ -31,3 +31,12 @@ proto-gen:
     --go_out=. --go_opt=module=github.com/Nekrasov-Sergey/goph-keeper \
     --go-grpc_out=. --go-grpc_opt=module=github.com/Nekrasov-Sergey/goph-keeper \
     api/proto/keeper.proto
+
+generate-certs:
+	mkdir -p certs
+	openssl req -x509 -nodes -days 365 \
+	-newkey rsa:4096 \
+	-keyout certs/server.key \
+	-out certs/server.crt \
+	-config certs/cert.conf \
+	-extensions req_ext
