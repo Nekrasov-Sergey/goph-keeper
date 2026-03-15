@@ -7,19 +7,30 @@ LDFLAGS = -ldflags "\
 
 .PHONY: server
 server: build-server
-	@./cmd/server/server
+	@./build/server-darwin-arm64
 
 .PHONY: build-server
 build-server:
-	@go build ${LDFLAGS} -o ./cmd/server/server ./cmd/server/server.go
+	@go build ${LDFLAGS} -o ./build/server-darwin-arm64 ./cmd/server/server.go
 
 .PHONY: client
-client: build-client
-	@./cmd/client/client
+client: build-macos
+	@./build/client-darwin-arm64
 
-.PHONY: build-client
-build-client:
-	@go build ${LDFLAGS} -o ./cmd/client/client ./cmd/client/client.go
+.PHONY: build-all
+build-all: build-linux build-macos build-windows
+
+.PHONY: build-macos
+build-macos:
+	@GOOS=darwin GOARCH=arm64 go build ${LDFLAGS} -o ./build/client-darwin-arm64 ./cmd/client/client.go
+
+.PHONY: build-linux
+build-linux:
+	@GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o ./build/client-linux-amd64 ./cmd/client/client.go
+
+.PHONY: build-windows
+build-windows:
+	@GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o ./build/client-windows-amd64.exe ./cmd/client/client.go
 
 .PHONY: gen
 gen: proto-gen
