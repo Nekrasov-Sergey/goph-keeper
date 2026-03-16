@@ -37,6 +37,10 @@ build-client-windows:
 
 .PHONY: gen
 gen: proto-gen generate-certs
+	@echo "🧰 Генерация моков..."
+	@rm -rf internal/server/service/mocks
+	@mkdir -p internal/server/service/mocks
+	@go generate ./...
 
 .PHONY: proto-gen
 proto-gen:

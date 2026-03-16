@@ -24,7 +24,7 @@ func (c *Client) GetSecret(ctx context.Context) {
 	ctx, cancel := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel()
 
-	resp, err := c.grpcClient.GetSecret(ctx, &pb.GetSecretRequest{
+	resp, err := c.GRPCClient.GetSecret(ctx, &pb.GetSecretRequest{
 		Id: id,
 	})
 	if err != nil {

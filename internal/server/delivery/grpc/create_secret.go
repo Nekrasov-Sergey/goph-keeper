@@ -28,14 +28,14 @@ func (s *Server) CreateSecret(ctx context.Context, in *pb.CreateSecretRequest) (
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	secretInput := &types.SecretInput{
+	secretPayload := &types.SecretPayload{
 		Name:     in.Name,
 		Type:     secretType,
 		Data:     in.Data,
 		Metadata: in.Metadata,
 	}
 
-	err = s.service.CreateSecret(ctx, secretInput, userID)
+	err = s.service.CreateSecret(ctx, secretPayload, userID)
 	if err != nil {
 		if errors.Is(err, errcodes.ErrSecretNameAlreadyExists) {
 			return nil, status.Error(codes.AlreadyExists, err.Error())

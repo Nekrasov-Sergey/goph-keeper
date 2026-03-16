@@ -36,7 +36,7 @@ func run() (err error) {
 	}
 	defer multierr.AppendInvoke(&err, multierr.Close(grpcClient))
 
-	cli := client.New(cfg, grpcClient.Client)
+	cli := client.New(grpcClient.Client)
 
 	cli.AuthMenu(ctx)
 	fmt.Println()

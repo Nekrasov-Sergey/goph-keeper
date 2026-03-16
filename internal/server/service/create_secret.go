@@ -10,7 +10,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/crypto"
 )
 
-func (s *Service) CreateSecret(ctx context.Context, secretInput *types.SecretInput, userID int64) error {
+func (s *Service) CreateSecret(ctx context.Context, secretPayload *types.SecretPayload, userID int64) error {
 	user, err := s.repo.GetUserByID(ctx, userID)
 	if err != nil {
 		return err
@@ -21,16 +21,16 @@ func (s *Service) CreateSecret(ctx context.Context, secretInput *types.SecretInp
 		return errors.Wrap(err, "не удалось расшифровать ключ пользователя")
 	}
 
-	encryptedData, err := crypto.Encrypt(userKey, secretInput.Data)
+	encryptedData, err := crypto.Encrypt(userKey, secretPayload.Data)
 	if err != nil {
 		return errors.Wrap(err, "не удалось зашифровать секрет")
 	}
 
 	secret := &types.Secret{
-		Name:          secretInput.Name,
-		Type:          secretInput.Type,
+		Name:          secretPayload.Name,
+		Type:          secretPayload.Type,
 		EncryptedData: encryptedData,
-		Metadata:      secretInput.Metadata,
+		Metadata:      secretPayload.Metadata,
 		UserID:        userID,
 		CreatedAt:     time.Now(),
 	}

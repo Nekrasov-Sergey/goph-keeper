@@ -6,6 +6,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
+	"github.com/Nekrasov-Sergey/goph-keeper/pkg/auth"
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/crypto"
 )
 
@@ -32,5 +33,5 @@ func (s *Service) Register(ctx context.Context, user *types.User) (token string,
 		return "", err
 	}
 
-	return s.generateToken(userID)
+	return auth.GenerateToken(userID, s.jwtSecret)
 }

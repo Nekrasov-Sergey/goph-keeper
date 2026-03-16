@@ -20,7 +20,7 @@ func (c *Client) UpdateSecret(ctx context.Context) {
 	ctx1, cancel1 := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel1()
 
-	resp, err := c.grpcClient.GetSecret(ctx1, &pb.GetSecretRequest{
+	resp, err := c.GRPCClient.GetSecret(ctx1, &pb.GetSecretRequest{
 		Id: id,
 	})
 	if err != nil {
@@ -43,7 +43,7 @@ func (c *Client) UpdateSecret(ctx context.Context) {
 	ctx2, cancel2 := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel2()
 
-	_, err = c.grpcClient.UpdateSecret(ctx2, &pb.UpdateSecretRequest{
+	_, err = c.GRPCClient.UpdateSecret(ctx2, &pb.UpdateSecretRequest{
 		Id:       id,
 		Name:     updatedSecret.Name,
 		Data:     updatedSecret.Data,

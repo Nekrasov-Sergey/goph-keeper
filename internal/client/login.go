@@ -17,7 +17,7 @@ func (c *Client) Login(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	resp, err := c.grpcClient.Login(ctx, &pb.LoginRequest{
+	resp, err := c.GRPCClient.Login(ctx, &pb.LoginRequest{
 		Login:    creds.Login,
 		Password: creds.Password,
 	})

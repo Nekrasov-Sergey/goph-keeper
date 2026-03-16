@@ -92,7 +92,7 @@ func promptSecretID() (int64, error) {
 	return parsed, nil
 }
 
-func promptCreateSecret() (*types.SecretInput, error) {
+func promptCreateSecret() (*types.SecretPayload, error) {
 	items := []struct {
 		label string
 		typ   types.SecretType
@@ -124,22 +124,22 @@ func promptCreateSecret() (*types.SecretInput, error) {
 		return nil, errors.New("операция отменена")
 	}
 
-	secret := &types.SecretInput{
+	secretPayload := &types.SecretPayload{
 		Type: secretType,
 	}
 
 	switch secretType {
 	case types.SecretTypeLoginPassword:
-		secret.Data, err = promptCreateLoginPassword()
+		secretPayload.Data, err = promptCreateLoginPassword()
 
 	case types.SecretTypeText:
-		secret.Data, err = promptCreateText()
+		secretPayload.Data, err = promptCreateText()
 
 	case types.SecretTypeBinary:
-		secret.Data, err = promptCreateBinary()
+		secretPayload.Data, err = promptCreateBinary()
 
 	case types.SecretTypeBankCard:
-		secret.Data, err = promptCreateBankCard()
+		secretPayload.Data, err = promptCreateBankCard()
 	}
 
 	if err != nil {
@@ -151,7 +151,7 @@ func promptCreateSecret() (*types.SecretInput, error) {
 		return nil, err
 	}
 
-	secret.Name = name
+	secretPayload.Name = name
 
 	metaChoice, err := selectMenu(
 		"Добавить дополнительную информацию?",
@@ -166,10 +166,10 @@ func promptCreateSecret() (*types.SecretInput, error) {
 		if err != nil {
 			return nil, err
 		}
-		secret.Metadata = utils.Ptr(meta)
+		secretPayload.Metadata = utils.Ptr(meta)
 	}
 
-	return secret, nil
+	return secretPayload, nil
 }
 
 func promptUpdateSecret(secretType types.SecretType) (*types.UpdatedSecret, error) {

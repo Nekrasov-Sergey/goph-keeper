@@ -19,7 +19,7 @@ func (c *Client) DeleteSecret(ctx context.Context) {
 	ctx, cancel := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel()
 
-	_, err = c.grpcClient.DeleteSecret(ctx, &pb.DeleteSecretRequest{
+	_, err = c.GRPCClient.DeleteSecret(ctx, &pb.DeleteSecretRequest{
 		Id: id,
 	})
 	if err != nil {

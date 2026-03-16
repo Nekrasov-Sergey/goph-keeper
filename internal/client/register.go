@@ -17,7 +17,7 @@ func (c *Client) Register(ctx context.Context) error {
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	resp, err := c.grpcClient.Register(ctx, &pb.RegisterRequest{
+	resp, err := c.GRPCClient.Register(ctx, &pb.RegisterRequest{
 		Login:    creds.Login,
 		Password: creds.Password,
 	})
