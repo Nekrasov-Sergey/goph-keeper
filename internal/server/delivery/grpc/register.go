@@ -18,6 +18,10 @@ func (s *Server) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.Regi
 		Password: in.Password,
 	}
 
+	if err := validateUser(user); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	token, err := s.service.Register(ctx, user)
 	if err != nil {
 		if errors.Is(err, errcodes.ErrLoginAlreadyExists) {
@@ -29,4 +33,14 @@ func (s *Server) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.Regi
 	return &pb.RegisterResponse{
 		Token: token,
 	}, nil
+}
+
+func validateUser(user *types.User) error {
+	if user.Login == "" {
+		return errors.New("отсутствует логин")
+	}
+	if user.Password == "" {
+		return errors.New("отсутствует пароль")
+	}
+	return nil
 }

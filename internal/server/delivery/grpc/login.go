@@ -18,6 +18,10 @@ func (s *Server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginRespo
 		Password: in.Password,
 	}
 
+	if err := validateUser(user); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	token, err := s.service.Login(ctx, user)
 	if err != nil {
 		if errors.Is(err, errcodes.ErrInvalidCredentials) {

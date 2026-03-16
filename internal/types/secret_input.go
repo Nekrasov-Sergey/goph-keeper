@@ -1,6 +1,6 @@
 package types
 
-type SecretInput struct {
+type SecretPayload struct {
 	Name     string
 	Type     SecretType
 	Data     []byte

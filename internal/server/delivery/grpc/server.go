@@ -18,8 +18,8 @@ type Service interface {
 	Login(ctx context.Context, user *types.User) (token string, err error)
 
 	GetSecrets(ctx context.Context, userID int64) (secrets []types.Secret, err error)
-	CreateSecret(ctx context.Context, secretInput *types.SecretInput, userID int64) error
-	GetSecret(ctx context.Context, secretID, userID int64) (*types.SecretInput, error)
+	CreateSecret(ctx context.Context, secretPayload *types.SecretPayload, userID int64) error
+	GetSecret(ctx context.Context, secretID, userID int64) (*types.SecretPayload, error)
 	UpdateSecret(ctx context.Context, updatedSecret *types.UpdatedSecret, userID int64) error
 	DeleteSecret(ctx context.Context, secretID, userID int64) error
 }

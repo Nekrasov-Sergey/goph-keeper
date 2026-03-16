@@ -8,6 +8,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
 )
 
+//go:generate minimock -i Repository -o ./mocks/repo.go -n RepoMock
 type Repository interface {
 	WithTx(ctx context.Context, fn func(txRepo Repository) error) error
 	// Close закрывает соединение с хранилищем и освобождает ресурсы

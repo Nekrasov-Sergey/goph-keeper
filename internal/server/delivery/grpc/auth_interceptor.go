@@ -16,7 +16,7 @@ import (
 
 type contextKey string
 
-const userIDKey contextKey = "user_id"
+const UserIDKey contextKey = "user_id"
 
 func AuthInterceptor(jwtSecret []byte) grpc.UnaryServerInterceptor {
 	publicMethods := map[string]struct{}{
@@ -60,14 +60,14 @@ func AuthInterceptor(jwtSecret []byte) grpc.UnaryServerInterceptor {
 
 		userID := int64(userIDFloat)
 
-		ctx = context.WithValue(ctx, userIDKey, userID)
+		ctx = context.WithValue(ctx, UserIDKey, userID)
 
 		return handler(ctx, req)
 	}
 }
 
 func GetUserID(ctx context.Context) (int64, error) {
-	id, ok := ctx.Value(userIDKey).(int64)
+	id, ok := ctx.Value(UserIDKey).(int64)
 	if !ok {
 		return 0, errors.New("пользователь не найден в контексте")
 	}
