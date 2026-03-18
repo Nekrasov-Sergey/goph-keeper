@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -11,6 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// LoggerInterceptor возвращает интерцептор для логирования gRPC-запросов.
 func LoggerInterceptor(baseLogger zerolog.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 		l := baseLogger.With().

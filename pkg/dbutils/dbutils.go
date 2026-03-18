@@ -1,3 +1,4 @@
+// Package dbutils содержит утилиты для работы с базой данных.
 package dbutils
 
 import (
@@ -58,6 +59,7 @@ func NamedExec(ctx context.Context, db sqlx.ExtContext, q string, arg any) error
 	})
 }
 
+// runWithRetries выполняет функцию с повторными попытками при ошибках соединения.
 func runWithRetries(ctx context.Context, fn func() error) (err error) {
 	delays := []time.Duration{1 * time.Second, 3 * time.Second, 5 * time.Second, 0}
 	for i, delay := range delays {
@@ -86,6 +88,7 @@ func runWithRetries(ctx context.Context, fn func() error) (err error) {
 	return err
 }
 
+// isConnectionError проверяет, является ли ошибка ошибкой соединения с PostgreSQL.
 func isConnectionError(err error) bool {
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {

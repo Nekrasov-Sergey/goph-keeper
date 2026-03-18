@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/crypto"
 )
 
+// Register регистрирует нового пользователя и возвращает JWT-токен.
 func (s *Service) Register(ctx context.Context, user *types.User) (token string, err error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {

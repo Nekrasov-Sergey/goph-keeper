@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/crypto"
 )
 
+// GetSecret возвращает расшифрованный секрет по ID.
 func (s *Service) GetSecret(ctx context.Context, secretID, userID int64) (*types.SecretPayload, error) {
 	secret, err := s.repo.GetSecret(ctx, secretID, userID)
 	if err != nil {

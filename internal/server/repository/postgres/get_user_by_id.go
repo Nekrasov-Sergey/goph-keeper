@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -11,6 +12,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// GetUserByID возвращает пользователя по ID.
 func (p *Postgres) GetUserByID(ctx context.Context, id int64) (user *types.User, err error) {
 	const q = `select id, login, password_hash, encrypted_user_key
 from users

@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/mappers"
 )
 
+// GetSecrets получает список всех секретов пользователя.
 func (c *Client) GetSecrets(ctx context.Context) {
 	ctx, cancel := context.WithTimeout(c.AuthContext(ctx), 30*time.Second)
 	defer cancel()
@@ -22,7 +24,7 @@ func (c *Client) GetSecrets(ctx context.Context) {
 
 	if len(resp.Secrets) == 0 {
 		fmt.Println()
-		fmt.Println("секретов нет")
+		fmt.Println("Секретов нет")
 		return
 	}
 

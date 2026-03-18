@@ -1,3 +1,4 @@
+// Package auth содержит функции для работы с JWT-токенами.
 package auth
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// GenerateToken создаёт JWT-токен для пользователя с сроком действия 24 часа.
 func GenerateToken(userID int64, jwtSecret []byte) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,

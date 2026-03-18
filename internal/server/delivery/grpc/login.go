@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// Login обрабатывает запрос на аутентификацию пользователя.
 func (s *Server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	user := &types.User{
 		Login:    in.Login,

@@ -1,3 +1,4 @@
+// Package logger содержит настройку логирования приложения.
 package logger
 
 import (
@@ -10,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// New настраивает формат вывода zerolog
+// New настраивает и возвращает логгер с форматированным выводом.
 func New() zerolog.Logger {
 	keys := []string{"method", "url", "req_id", "status", "duration", "size", "stack"}
 	consoleWriter := zerolog.ConsoleWriter{

@@ -1,5 +1,7 @@
+// Package types содержит доменные типы данных приложения.
 package types
 
+// User представляет пользователя системы.
 type User struct {
 	ID               int64  `db:"id"`
 	Login            string `db:"login"`

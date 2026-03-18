@@ -1,3 +1,4 @@
+// Package main — точка входа клиента GophKeeper.
 package main
 
 import (
@@ -15,12 +16,14 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/config"
 )
 
+// main — точка входа приложения.
 func main() {
 	if err := run(); err != nil {
 		log.Fatal().Err(err).Msg("Клиент завершился с ошибкой")
 	}
 }
 
+// run инициализирует и запускает CLI-клиент.
 func run() (err error) {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()

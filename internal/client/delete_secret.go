@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -9,10 +10,11 @@ import (
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 )
 
+// DeleteSecret удаляет секрет по ID.
 func (c *Client) DeleteSecret(ctx context.Context) {
 	id, err := promptSecretID()
 	if err != nil {
-		fmt.Println("ошибка ввода:", err)
+		fmt.Println("Ошибка ввода:", err)
 		return
 	}
 

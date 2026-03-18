@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -11,6 +12,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// GetSecret возвращает секрет по ID для указанного пользователя.
 func (p *Postgres) GetSecret(ctx context.Context, secretID, userID int64) (secret *types.Secret, err error) {
 	const q = `select id, name, type, encrypted_data, metadata, user_id, created_at, updated_at
 from secrets

@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/dbutils"
 )
 
+// UpdateSecret обновляет секрет в базе данных.
 func (p *Postgres) UpdateSecret(ctx context.Context, secret *types.Secret) error {
 	const q = `update secrets
 set name           = :name,

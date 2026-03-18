@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// CreateUser создаёт нового пользователя в базе данных.
 func (p *Postgres) CreateUser(ctx context.Context, user *types.User) (userID int64, err error) {
 	const q = `insert into users (login, password_hash, encrypted_user_key)
 values (:login, :password_hash, :encrypted_user_key)

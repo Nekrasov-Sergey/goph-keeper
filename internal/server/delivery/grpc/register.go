@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// Register обрабатывает запрос на регистрацию пользователя.
 func (s *Server) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	user := &types.User{
 		Login:    in.Login,
@@ -35,6 +37,7 @@ func (s *Server) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.Regi
 	}, nil
 }
 
+// validateUser проверяет корректность данных пользователя.
 func validateUser(user *types.User) error {
 	if user.Login == "" {
 		return errors.New("отсутствует логин")

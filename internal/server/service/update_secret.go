@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -11,6 +12,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/utils"
 )
 
+// UpdateSecret обновляет секрет пользователя.
 func (s *Service) UpdateSecret(ctx context.Context, updatedSecret *types.UpdatedSecret, userID int64) error {
 	currentSecret, err := s.repo.GetSecret(ctx, updatedSecret.ID, userID)
 	if err != nil {

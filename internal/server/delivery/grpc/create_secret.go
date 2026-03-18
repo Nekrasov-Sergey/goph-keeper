@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/mappers"
 )
 
+// CreateSecret обрабатывает запрос на создание секрета.
 func (s *Server) CreateSecret(ctx context.Context, in *pb.CreateSecretRequest) (*pb.CreateSecretResponse, error) {
 	userID, err := GetUserID(ctx)
 	if err != nil {

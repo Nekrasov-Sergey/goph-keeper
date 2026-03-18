@@ -1,3 +1,4 @@
+// Package mappers содержит функции преобразования типов между protobuf и доменными типами.
 package mappers
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
 )
 
+// ProtoSecretTypeToDomain преобразует тип секрета из protobuf в доменный тип.
 func ProtoSecretTypeToDomain(t pb.SecretType) (types.SecretType, error) {
 	switch t {
 	case pb.SecretType_LoginPassword:
@@ -26,6 +28,7 @@ func ProtoSecretTypeToDomain(t pb.SecretType) (types.SecretType, error) {
 	}
 }
 
+// TranslateProtoSecretType преобразует тип секрета из protobuf в русское название.
 func TranslateProtoSecretType(t pb.SecretType) (types.SecretTypeRu, error) {
 	switch t {
 	case pb.SecretType_LoginPassword:
@@ -45,6 +48,7 @@ func TranslateProtoSecretType(t pb.SecretType) (types.SecretTypeRu, error) {
 	}
 }
 
+// DomainSecretTypeToProto преобразует доменный тип секрета в protobuf-тип.
 func DomainSecretTypeToProto(t types.SecretType) (pb.SecretType, error) {
 	switch t {
 	case types.SecretTypeLoginPassword:

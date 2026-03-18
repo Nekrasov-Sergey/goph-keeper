@@ -1,3 +1,4 @@
+// Package config содержит конфигурацию клиента и сервера.
 package config
 
 import (
@@ -6,11 +7,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ClientConfig содержит конфигурацию клиента.
 type ClientConfig struct {
 	GRPCAddr    string
 	TLSCertFile string
 }
 
+// NewClientConfig загружает конфигурацию клиента из файла.
 func NewClientConfig() (*ClientConfig, error) {
 	viper.SetConfigFile(GetConfigPath())
 

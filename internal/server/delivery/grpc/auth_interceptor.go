@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -14,10 +15,13 @@ import (
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 )
 
+// contextKey определяет тип ключа для контекста.
 type contextKey string
 
+// UserIDKey — ключ для хранения ID пользователя в контексте.
 const UserIDKey contextKey = "user_id"
 
+// AuthInterceptor возвращает интерцептор для аутентификации JWT-токенов.
 func AuthInterceptor(jwtSecret []byte) grpc.UnaryServerInterceptor {
 	publicMethods := map[string]struct{}{
 		pb.Keeper_Register_FullMethodName: {},
@@ -66,6 +70,7 @@ func AuthInterceptor(jwtSecret []byte) grpc.UnaryServerInterceptor {
 	}
 }
 
+// GetUserID извлекает ID пользователя из контекста.
 func GetUserID(ctx context.Context) (int64, error) {
 	id, ok := ctx.Value(UserIDKey).(int64)
 	if !ok {

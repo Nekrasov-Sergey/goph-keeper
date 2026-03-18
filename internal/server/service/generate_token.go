@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// generateToken создаёт JWT-токен для пользователя.
 func (s *Service) generateToken(userID int64) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,

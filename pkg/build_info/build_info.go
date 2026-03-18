@@ -1,3 +1,4 @@
+// Package buildinfo содержит информацию о сборке приложения.
 package buildinfo
 
 import (
@@ -5,11 +6,15 @@ import (
 )
 
 var (
+	// buildVersion — версия сборки.
 	buildVersion = "N/A"
-	buildDate    = "N/A"
-	buildCommit  = "N/A"
+	// buildDate — дата сборки.
+	buildDate = "N/A"
+	// buildCommit — коммит сборки.
+	buildCommit = "N/A"
 )
 
+// Print выводит информацию о сборке: версию, дату и коммит.
 func Print() {
 	fmt.Println("Build version:", buildVersion)
 	fmt.Println("Build date:", buildDate)

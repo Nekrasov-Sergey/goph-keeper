@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -12,13 +13,14 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/dbutils"
 )
 
-// Postgres реализует хранилище метрик на базе PostgreSQL.
+// Postgres реализует хранилище данных на базе PostgreSQL.
 type Postgres struct {
 	db     sqlx.ExtContext
 	rawDB  *sqlx.DB
 	logger zerolog.Logger
 }
 
+// New создаёт новое подключение к базе данных и применяет миграции.
 func New(databaseDSN string, logger zerolog.Logger) (*Postgres, error) {
 	if err := migrateDB(databaseDSN, logger); err != nil {
 		return nil, err
@@ -38,6 +40,7 @@ func New(databaseDSN string, logger zerolog.Logger) (*Postgres, error) {
 	}, nil
 }
 
+// Close закрывает соединение с базой данных.
 func (p *Postgres) Close() error {
 	if err := p.rawDB.Close(); err != nil {
 		return errors.Wrap(err, "не удалось закрыть соединения с БД")
@@ -46,6 +49,7 @@ func (p *Postgres) Close() error {
 	return nil
 }
 
+// WithTx выполняет функцию в рамках транзакции.
 func (p *Postgres) WithTx(ctx context.Context, fn func(txRepo service.Repository) error) error {
 	return dbutils.WrapTxx(ctx, p.rawDB, nil, func(tx *sqlx.Tx) error {
 		txRepo := &Postgres{
