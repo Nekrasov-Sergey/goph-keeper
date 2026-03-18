@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -8,6 +9,7 @@ import (
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 )
 
+// Login выполняет аутентификацию пользователя.
 func (c *Client) Login(ctx context.Context) error {
 	creds, err := promptCredentials()
 	if err != nil {

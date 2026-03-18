@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
 )
 
+// Service определяет интерфейс бизнес-логики.
 type Service interface {
 	Register(ctx context.Context, user *types.User) (token string, err error)
 	Login(ctx context.Context, user *types.User) (token string, err error)
@@ -31,32 +33,38 @@ type options struct {
 	tlsKeyFile  string
 }
 
+// Option определяет функцию настройки gRPC-сервера.
 type Option func(*options)
 
+// WithGRPCAddress устанавливает адрес gRPC-сервера.
 func WithGRPCAddress(gRPCAddress string) Option {
 	return func(o *options) {
 		o.gRPCAddress = gRPCAddress
 	}
 }
 
+// WithJWTSecret устанавливает секретный ключ для JWT.
 func WithJWTSecret(jwtSecret []byte) Option {
 	return func(o *options) {
 		o.jwtSecret = jwtSecret
 	}
 }
 
+// WithTLSCertFile устанавливает путь к TLS-сертификату.
 func WithTLSCertFile(tlsCertFile string) Option {
 	return func(o *options) {
 		o.tlsCertFile = tlsCertFile
 	}
 }
 
+// WithTLSKeyFile устанавливает путь к приватному ключу TLS.
 func WithTLSKeyFile(tlsKeyFile string) Option {
 	return func(o *options) {
 		o.tlsKeyFile = tlsKeyFile
 	}
 }
 
+// Server представляет gRPC-сервер.
 type Server struct {
 	pb.UnimplementedKeeperServer
 	address string
@@ -65,6 +73,7 @@ type Server struct {
 	logger  zerolog.Logger
 }
 
+// New создаёт новый gRPC-сервер.
 func New(service Service, logger zerolog.Logger, opts ...Option) (*Server, error) {
 	o := &options{}
 
@@ -92,6 +101,7 @@ func New(service Service, logger zerolog.Logger, opts ...Option) (*Server, error
 	}, nil
 }
 
+// Run запускает gRPC-сервер.
 func (s *Server) Run() error {
 	listener, err := net.Listen("tcp", s.address)
 	if err != nil {
@@ -109,6 +119,7 @@ func (s *Server) Run() error {
 	return nil
 }
 
+// Shutdown gracefully останавливает gRPC-сервер.
 func (s *Server) Shutdown(ctx context.Context) error {
 	done := make(chan struct{})
 

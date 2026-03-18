@@ -1,3 +1,4 @@
+// Package main — точка входа сервера GophKeeper.
 package main
 
 import (
@@ -19,6 +20,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/logger"
 )
 
+// main — точка входа приложения.
 func main() {
 	buildinfo.Print()
 	if err := run(); err != nil {
@@ -26,6 +28,7 @@ func main() {
 	}
 }
 
+// run инициализирует и запускает gRPC-сервер.
 func run() (err error) {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()

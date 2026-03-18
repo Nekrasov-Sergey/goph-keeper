@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -14,10 +15,11 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/utils"
 )
 
+// GetSecret получает секрет по ID и отображает его содержимое.
 func (c *Client) GetSecret(ctx context.Context) {
 	id, err := promptSecretID()
 	if err != nil {
-		fmt.Println("ошибка ввода:", err)
+		fmt.Println("Ошибка ввода:", err)
 		return
 	}
 
@@ -72,12 +74,12 @@ func (c *Client) GetSecret(ctx context.Context) {
 	case types.SecretTypeBinary:
 		path, err := promptString("Куда сохранить файл")
 		if err != nil {
-			fmt.Println("ошибка ввода:", err)
+			fmt.Println("Ошибка ввода:", err)
 			return
 		}
 
 		if err := os.WriteFile(path, resp.Data, 0600); err != nil {
-			fmt.Println("ошибка сохранения файла:", err)
+			fmt.Println("Ошибка сохранения файла:", err)
 			return
 		}
 

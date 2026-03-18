@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -10,10 +11,11 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/mappers"
 )
 
+// UpdateSecret обновляет существующий секрет.
 func (c *Client) UpdateSecret(ctx context.Context) {
 	id, err := promptSecretID()
 	if err != nil {
-		fmt.Println("ошибка ввода:", err)
+		fmt.Println("Ошибка ввода:", err)
 		return
 	}
 

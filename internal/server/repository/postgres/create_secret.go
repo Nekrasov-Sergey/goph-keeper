@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// CreateSecret создаёт новый секрет в базе данных.
 func (p *Postgres) CreateSecret(ctx context.Context, secret *types.Secret) error {
 	const q = `insert into secrets (name, type, encrypted_data, metadata, user_id, created_at)
 values (:name, :type, :encrypted_data, :metadata, :user_id, :created_at)`

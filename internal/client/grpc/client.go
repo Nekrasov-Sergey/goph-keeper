@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-клиент для взаимодействия с сервером.
 package grpc
 
 import (
@@ -12,30 +13,36 @@ import (
 	pb "github.com/Nekrasov-Sergey/goph-keeper/internal/proto"
 )
 
+// options содержит параметры конфигурации gRPC-клиента.
 type options struct {
 	gRPCAddress string
 	tlsCertFile string
 }
 
+// Option определяет функцию настройки gRPC-клиента.
 type Option func(*options)
 
+// WithGRPCAddress устанавливает адрес gRPC-сервера.
 func WithGRPCAddress(gRPCAddress string) Option {
 	return func(o *options) {
 		o.gRPCAddress = gRPCAddress
 	}
 }
 
+// WithTLSCertFile устанавливает путь к TLS-сертификату.
 func WithTLSCertFile(tlsCertFile string) Option {
 	return func(o *options) {
 		o.tlsCertFile = tlsCertFile
 	}
 }
 
+// KeeperClient представляет gRPC-клиент для работы с Keeper.
 type KeeperClient struct {
 	Client pb.KeeperClient
 	conn   *grpc.ClientConn
 }
 
+// New создаёт новый gRPC-клиент с TLS.
 func New(opts ...Option) (*KeeperClient, error) {
 	o := &options{}
 
@@ -70,6 +77,7 @@ func New(opts ...Option) (*KeeperClient, error) {
 	}, nil
 }
 
+// Close закрывает gRPC-соединение.
 func (c *KeeperClient) Close() error {
 	if err := c.conn.Close(); err != nil {
 		return errors.Wrap(err, "ошибка закрытия gRPC соединения")

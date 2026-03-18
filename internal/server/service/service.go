@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -8,6 +9,8 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/internal/types"
 )
 
+// Repository определяет интерфейс хранилища данных.
+//
 //go:generate minimock -i Repository -o ./mocks/repo.go -n RepoMock
 type Repository interface {
 	WithTx(ctx context.Context, fn func(txRepo Repository) error) error
@@ -25,21 +28,24 @@ type Repository interface {
 	DeleteSecret(ctx context.Context, secretID, userID int64) error
 }
 
+// Option определяет функцию настройки сервиса.
 type Option func(*Service)
 
+// WithJWTSecret устанавливает секретный ключ для JWT.
 func WithJWTSecret(jwtSecret []byte) Option {
 	return func(s *Service) {
 		s.jwtSecret = jwtSecret
 	}
 }
 
+// WithMasterKey устанавливает мастер-ключ для шифрования.
 func WithMasterKey(masterKey []byte) Option {
 	return func(s *Service) {
 		s.masterKey = masterKey
 	}
 }
 
-// Service реализует бизнес-логику работы с метриками.
+// Service реализует бизнес-логику работы с секретами.
 type Service struct {
 	repo      Repository
 	logger    zerolog.Logger
@@ -47,6 +53,7 @@ type Service struct {
 	masterKey []byte
 }
 
+// New создаёт новый экземпляр сервиса.
 func New(repo Repository, logger zerolog.Logger, opts ...Option) *Service {
 	s := &Service{
 		repo:   repo,

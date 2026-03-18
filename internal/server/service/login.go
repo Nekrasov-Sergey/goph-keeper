@@ -1,3 +1,4 @@
+// Package service реализует бизнес-логику приложения.
 package service
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/errcodes"
 )
 
+// Login аутентифицирует пользователя и возвращает JWT-токен.
 func (s *Service) Login(ctx context.Context, user *types.User) (token string, err error) {
 	dbUser, err := s.repo.GetUserByLogin(ctx, user.Login)
 	if err != nil {

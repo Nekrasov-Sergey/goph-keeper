@@ -1,3 +1,4 @@
+// Package crypto содержит функции шифрования и расшифрования данных.
 package crypto
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Encrypt шифрует данные с использованием AES-GCM.
 func Encrypt(key []byte, plaintext []byte) ([]byte, error) {
 	if err := validateKey(key); err != nil {
 		return nil, err
@@ -33,6 +35,7 @@ func Encrypt(key []byte, plaintext []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
+// Decrypt расшифровывает данные, зашифрованные с помощью Encrypt.
 func Decrypt(key []byte, data []byte) ([]byte, error) {
 	if err := validateKey(key); err != nil {
 		return nil, err
@@ -65,6 +68,7 @@ func Decrypt(key []byte, data []byte) ([]byte, error) {
 	return plaintext, nil
 }
 
+// GenerateRandom генерирует случайные байты заданного размера.
 func GenerateRandom(size int) ([]byte, error) {
 	b := make([]byte, size)
 
@@ -75,6 +79,7 @@ func GenerateRandom(size int) ([]byte, error) {
 	return b, nil
 }
 
+// validateKey проверяет, что ключ имеет допустимую длину (16, 24 или 32 байта).
 func validateKey(key []byte) error {
 	switch len(key) {
 	case 16, 24, 32:

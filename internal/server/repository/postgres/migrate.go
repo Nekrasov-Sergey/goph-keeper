@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// migrateDB применяет миграции к базе данных.
 func migrateDB(databaseDSN string, logger zerolog.Logger) error {
 	logger.Info().Msg("Запуск миграций базы данных...")
 

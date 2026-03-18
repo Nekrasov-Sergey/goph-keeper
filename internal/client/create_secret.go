@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/mappers"
 )
 
+// CreateSecret создаёт новый секрет.
 func (c *Client) CreateSecret(ctx context.Context) {
 	input, err := promptCreateSecret()
 	if err != nil {

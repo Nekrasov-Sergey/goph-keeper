@@ -1,3 +1,4 @@
+// Package grpc реализует gRPC-сервер для обработки запросов.
 package grpc
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/mappers"
 )
 
+// GetSecrets обрабатывает запрос на получение списка секретов.
 func (s *Server) GetSecrets(ctx context.Context, _ *pb.GetSecretsRequest) (*pb.GetSecretsResponse, error) {
 	userID, err := GetUserID(ctx)
 	if err != nil {

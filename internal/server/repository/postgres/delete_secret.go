@@ -1,3 +1,4 @@
+// Package postgres реализует хранилище данных на базе PostgreSQL.
 package postgres
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/Nekrasov-Sergey/goph-keeper/pkg/dbutils"
 )
 
+// DeleteSecret удаляет секрет по ID.
 func (p *Postgres) DeleteSecret(ctx context.Context, secretID, userID int64) error {
 	const q = `delete from secrets where id = :id and user_id = :user_id`
 

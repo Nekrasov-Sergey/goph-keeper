@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -5,6 +6,7 @@ import (
 	"fmt"
 )
 
+// MainMenu отображает главное меню работы с секретами.
 func (c *Client) MainMenu(ctx context.Context) {
 	for {
 		fmt.Println()

@@ -1,9 +1,11 @@
+// Package types содержит доменные типы данных приложения.
 package types
 
 import (
 	"time"
 )
 
+// Secret представляет хранимый секрет пользователя.
 type Secret struct {
 	ID            int64      `db:"id"`
 	Name          string     `db:"name"`
@@ -15,6 +17,7 @@ type Secret struct {
 	UpdatedAt     *time.Time `db:"updated_at"`
 }
 
+// SecretType определяет тип секрета.
 type SecretType string
 
 const (
@@ -25,6 +28,7 @@ const (
 	SecretTypeBankCard      SecretType = "BankCard"
 )
 
+// SecretTypeRu определяет русское название типа секрета.
 type SecretTypeRu string
 
 const (

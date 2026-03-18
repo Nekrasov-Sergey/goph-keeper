@@ -1,3 +1,4 @@
+// Package client реализует CLI-клиент для взаимодействия с сервером.
 package client
 
 import (
@@ -7,6 +8,7 @@ import (
 	buildinfo "github.com/Nekrasov-Sergey/goph-keeper/pkg/build_info"
 )
 
+// AuthMenu отображает меню аутентификации.
 func (c *Client) AuthMenu(ctx context.Context) {
 	for {
 		fmt.Println()
